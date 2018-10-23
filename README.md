@@ -35,4 +35,11 @@ latest, err := fc.Latest(params)
 if err != nil {
     log.Println(err)
 }
+
+// currency conversion
+params := map[string]string{"from": "usd", "to": "gbp", "amount": "25.00"}
+latest, err := fc.Convert(params)
+if err != nil {
+    log.Println(err)
+}
 ```
