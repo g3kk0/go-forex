@@ -3,6 +3,8 @@ package goforex
 import (
 	"errors"
 	"fmt"
+	"strconv"
+	"strings"
 )
 
 type Convert struct {
@@ -45,49 +47,54 @@ func (c *Client) Convert(params ...map[string]string) (Convert, error) {
 		return convert, err
 	}
 
+	// how many decimals?
+	f := fmt.Sprint(rates.Rates[strings.ToUpper(to)])
+	toMultiplier, err := getMultiplier(f)
+	if err != nil {
+		return convert, err
+	}
+
+	amountMultiplier, err := getMultiplier(amount)
+	if err != nil {
+		return convert, err
+	}
+
+	toInt := rates.Rates[strings.ToUpper(to)] * float64(toMultiplier)
+	//amountInt := strconv.Atoi(amount) * amountMultiplier
+
+	fmt.Printf("toMultiplier = %+v\n", toMultiplier)
+	fmt.Printf("amountMultiplier = %+v\n", amountMultiplier)
+	fmt.Printf("toInt = %+v\n", toInt)
+	//fmt.Printf("amountInt = %+v\n", amountInt)
+
+	//toMultiplier := getMultiplier("10.00")
+	//amountMultiplier := getMultiplier("10.00")
+
+	//multiplier := getMultiplier()
+
+	fmt.Printf("amount = %+v\n", amount)
+
+	fmt.Printf("rates = %+v\n", rates)
+
 	convert.From = from
 	convert.To = to
 	convert.Amount = amount
 
-	// how many decimals?
-	multiplier :=
-
-		fmt.Printf("amount = %+v\n", amount)
-
-	fmt.Printf("rates = %+v\n", rates)
-
-	// u, err := url.Parse(BaseUrl)
-	// if err != nil {
-	// 	return latest, err
-	// }
-
-	// u.Path = "latest"
-	// if len(params) > 0 {
-	// 	q := u.Query()
-	// 	if params[0]["base"] != "" {
-	// 		q.Set("base", strings.ToUpper(params[0]["base"]))
-	// 	}
-	// 	if params[0]["symbols"] != "" {
-	// 		q.Set("symbols", strings.ToUpper(params[0]["symbols"]))
-	// 	}
-	// 	u.RawQuery = q.Encode()
-	// }
-
-	// resp, err := c.Conn.Get(u.String())
-	// if err != nil {
-	// 	return latest, err
-	// }
-	// defer resp.Body.Close()
-
-	// body, err := ioutil.ReadAll(resp.Body)
-	// if err != nil {
-	// 	return latest, err
-	// }
-
-	// err = json.Unmarshal(body, &latest)
-	// if err != nil {
-	// 	return latest, err
-	// }
-
 	return convert, nil
+}
+
+func getMultiplier(in string) (int, error) {
+	s := strings.Split(in, ".")
+
+	m := "1"
+	for i := 0; i < len(s[1]); i++ {
+		m = m + "0"
+	}
+
+	multiplier, err := strconv.Atoi(m)
+	if err != nil {
+		return 0, err
+	}
+
+	return multiplier, nil
 }
