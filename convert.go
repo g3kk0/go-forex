@@ -10,7 +10,7 @@ import (
 type Convert struct {
 	From   string `json:"from"`
 	To     string `json:"to"`
-	Amount string `json:"amount"`
+	Amount string `json:"amount"` // make this a string in json
 	Result string `json:"result"`
 }
 
@@ -48,23 +48,64 @@ func (c *Client) Convert(params ...map[string]string) (Convert, error) {
 	}
 
 	// how many decimals?
-	f := fmt.Sprint(rates.Rates[strings.ToUpper(to)])
-	toMultiplier, err := getMultiplier(f)
+	rate := fmt.Sprint(rates.Rates[strings.ToUpper(to)])
+	rateMultiplier, err := getMultiplier(rate)
 	if err != nil {
 		return convert, err
 	}
+
+	fmt.Printf("rate = %T %+v\n", rate, rate)
+	fmt.Printf("rateMultiplier = %+v\n", rateMultiplier)
 
 	amountMultiplier, err := getMultiplier(amount)
 	if err != nil {
 		return convert, err
 	}
 
-	toInt := rates.Rates[strings.ToUpper(to)] * float64(toMultiplier)
+	fmt.Printf("amount = %T %+v\n", amount, amount)
+	fmt.Printf("amountMultiplier = %+v\n", amountMultiplier)
+
+	// convert to int64
+
+	rateInt := int64(rates.Rates[strings.ToUpper(to)] * float64(rateMultiplier))
+
+	fmt.Printf("rateInt = %+v\n", rateInt)
+
+	amountFloat, err := strconv.ParseFloat(amount, 64)
+	if err != nil {
+		return convert, err
+	}
+
+	amountInt := int64(amountFloat * float64(amountMultiplier))
+
+	fmt.Printf("amountInt = %+v\n", amountInt)
+
+	// boo, err := strconv.ParseInt(amount, 10, 64)
+	// if err != nil {
+	// 	fmt.Printf("err = %+v\n", err)
+	// 	return convert, err
+	// }
+
+	//	fmt.Printf("x = %T %+v\n", boo, boo)
+
+	// perform calcs
+
+	result := rateInt * amountInt
+
+	fmt.Printf("result = %T %+v\n", result, result)
+
+	result2 := float64(result) / float64(rateMultiplier)
+
+	fmt.Printf("result2 = %T %+v\n", result2, result2)
+
+	// back to floats
+
+	//	toInt := rates.Rates[strings.ToUpper(to)] * float64(toMultiplier)
 	//amountInt := strconv.Atoi(amount) * amountMultiplier
 
-	fmt.Printf("toMultiplier = %+v\n", toMultiplier)
-	fmt.Printf("amountMultiplier = %+v\n", amountMultiplier)
-	fmt.Printf("toInt = %+v\n", toInt)
+	//	fmt.Printf("toMultiplier = %+v\n", toMultiplier)
+	//	fmt.Printf("amountMultiplier = %+v\n", amountMultiplier)
+	//	fmt.Printf("toInt = %+v\n", toInt)
 	//fmt.Printf("amountInt = %+v\n", amountInt)
 
 	//toMultiplier := getMultiplier("10.00")
@@ -72,9 +113,9 @@ func (c *Client) Convert(params ...map[string]string) (Convert, error) {
 
 	//multiplier := getMultiplier()
 
-	fmt.Printf("amount = %+v\n", amount)
+	//	fmt.Printf("amount = %+v\n", amount)
 
-	fmt.Printf("rates = %+v\n", rates)
+	//	fmt.Printf("rates = %+v\n", rates)
 
 	convert.From = from
 	convert.To = to
@@ -83,7 +124,7 @@ func (c *Client) Convert(params ...map[string]string) (Convert, error) {
 	return convert, nil
 }
 
-func getMultiplier(in string) (int, error) {
+func getMultiplier(in string) (int64, error) {
 	s := strings.Split(in, ".")
 
 	m := "1"
@@ -96,5 +137,5 @@ func getMultiplier(in string) (int, error) {
 		return 0, err
 	}
 
-	return multiplier, nil
+	return int64(multiplier), nil
 }
