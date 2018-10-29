@@ -38,8 +38,8 @@ func (c *Client) Convert(params ...map[string]string) (Convert, error) {
 		return convert, err
 	}
 
-	convert.From = params[0]["from"]
-	convert.To = params[0]["to"]
+	convert.From = strings.ToUpper(params[0]["from"])
+	convert.To = strings.ToUpper(params[0]["to"])
 	convert.Amount = amount
 
 	p := map[string]string{"base": convert.From, "symbols": convert.To}

@@ -26,45 +26,48 @@ if err != nil {
     log.Println(err)
 }
 
-fmt.Println(rates)
-
-{Base:EUR Date:2018-10-29 Rates:map[ILS:4.217 RON:4.6647 NZD:1.7401 CZK:25.849 ...]}
-
-fmt.Println(rates)
-// {Base:EUR Date:2018-10-29 Rates:map[ILS:4.217 RON:4.6647 NZD:1.7401 CZK:25.849 ...]}
-```
-
-```
-{Base:EUR Date:2018-10-29 Rates:map[ILS:4.217 RON:4.6647 NZD:1.7401 CZK:25.849 ...]}
+fmt.Printf("rates = %+v", rates)
+// {Base:EUR Date:2018-10-29 Rates:map[ILS:4.217 RON:4.6647 NZD:1.7401 ...]}
 ```
 
 ### Get Latest Rates for a Specific Base
 
+*Defaults to `EUR`*
 
-
-// quote against a specific base (default EUR)
+```go
 params := map[string]string{"base": "usd"}
 rates, err := fc.Latest(params)
 if err != nil {
     log.Println(err)
 }
 
-// quote against specific symbols
+fmt.Printf("rates = %+v", rates)
+// {Base:USD Date:2018-10-29 Rates:map[HUF:285.0364642826 ILS:3.7052983042 ...]}
+```
+
+### Get Rates for Specific Symbols
+
+```go
 params := map[string]string{"base": "usd", "symbols": "gbp,eur"}
-rate, err := fc.Latest(params)
+rates, err := fc.Latest(params)
 if err != nil {
     log.Println(err)
 }
 
+fmt.Printf("rates = %+v", rates)
+// {Base:USD Date:2018-10-29 Rates:map[GBP:0.7801423425 EUR:0.8786574115]}
+```
+
+### Currency Conversion
+
+```go
 // currency conversion
-params := map[string]string{"from": "usd", "to": "gbp", "amount": "25.00"}
+params := map[string]string{"from": "usd", "to": "gbp", "amount": "25.62"}
 conversion, err := fc.Convert(params)
 if err != nil {
     log.Println(err)
 }
 
-fmt.Println(conversion.Result)
-
-{From:eur To:gbp Amount:46.44 Result:41.2331472}
-
+fmt.Printf("conversion = %+v", conversion)
+// {From:EUR To:GBP Amount:25.62 Result:22.7474856}
 ```
