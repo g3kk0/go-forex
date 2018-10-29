@@ -32,8 +32,6 @@ fmt.Printf("rates = %+v", rates)
 
 ### Get Latest Rates for a Specific Base
 
-*Defaults to `EUR`*
-
 ```go
 params := map[string]string{"base": "usd"}
 rates, err := fc.Latest(params)
