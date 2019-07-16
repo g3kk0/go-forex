@@ -60,7 +60,7 @@ fmt.Printf("rates = %+v", rates)
 
 ```go
 // currency conversion
-params := map[string]string{"from": "usd", "to": "gbp", "amount": "25.62"}
+params := map[string]string{"from": "eur", "to": "gbp", "amount": "25.62"}
 conversion, err := fc.Convert(params)
 if err != nil {
     log.Println(err)
