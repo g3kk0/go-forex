@@ -1,6 +1,6 @@
 # Go Forex
 
-Provides access to foreign exchange rates and currency conversions. [exchangeratesapi.io](https://exchangeratesapi.io/)
+Provides access to foreign exchange rates and currency conversions. [exchangerate.host](https://exchangerate.host/)
 
 ## Installation
 

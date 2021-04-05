@@ -4,7 +4,7 @@ import (
 	"net/http"
 )
 
-const BaseUrl = "https://api.exchangeratesapi.io/"
+const BaseUrl = "https://api.exchangerate.host/"
 
 type Client struct {
 	Conn *http.Client
