@@ -1,1 +1,3 @@
-module github.com/g3kk0/go-forex
+module github.com/daesu/go-forex
+
+go 1.15
